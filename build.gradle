@@ -8,7 +8,7 @@ buildscript {
 apply plugin: 'com.github.jruby-gradle.base'
 import com.github.jrubygradle.JRubyExec
 
-defaultTasks 'runServer'
+defaultTasks 'runInterop'
 
 /* Disabling the default repositories so we can ues the new (unreleased)
  * default rubygems proxy
@@ -40,6 +40,10 @@ task prepareNative(type: Copy) {
 
 task runDemo(type: JRubyExec) {
     script './demo.rb'
+}
+
+task runInterop(type: JRubyExec) {
+    script './rubyinterop.rb'
 }
 
 task runServer(type: JRubyExec) {
