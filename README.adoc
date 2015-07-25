@@ -1,0 +1,22 @@
+= Nashorn + Ruby
+
+This is a repo full of what can be objectively considered bad ideas.
+
+
+
+== Requirements
+
+ * JDK8
+
+
+== Building
+
+This project uses link:http://jruby-gradle.org[JRuby/Gradle] to resolve
+dependencies and set up the environment properly. As such all you should need
+to execute is:
+
+----
+% ./gradlew
+----
+
+Which will run the default demo server
