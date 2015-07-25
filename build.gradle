@@ -1,0 +1,49 @@
+buildscript {
+    repositories { jcenter() }
+
+    dependencies {
+        classpath "com.github.jruby-gradle:jruby-gradle-plugin:0.4.0"
+    }
+}
+apply plugin: 'com.github.jruby-gradle.base'
+import com.github.jrubygradle.JRubyExec
+
+defaultTasks 'runServer'
+
+/* Disabling the default repositories so we can ues the new (unreleased)
+ * default rubygems proxy
+ */
+jruby { defaultRepositories = false }
+repositories {
+    maven { url "http://rubygems.lasagna.io/proxy/maven/releases" }
+
+    jcenter()
+
+    /* Needed to pull in avatar-js */
+    maven { url "https://maven.java.net/content/repositories/snapshots" }
+}
+
+configurations {
+    avatarjs
+}
+
+dependencies {
+    jrubyExec "com.oracle:avatar-js:${avatarJsVersion}"
+    avatarjs "com.oracle:libavatar-js-linux-x64:${avatarJsVersion}"
+}
+
+task prepareNative(type: Copy) {
+    from configurations.avatarjs
+    rename "libavatar-js-linux-x64-0.10.31-SNAPSHOT.so", "libavatar-js.so"
+    into "${buildDir}/native"
+}
+
+task runDemo(type: JRubyExec) {
+    script './demo.rb'
+}
+
+task runServer(type: JRubyExec) {
+    script './server.rb'
+    systemProperties 'java.library.path' : "${buildDir}/native"
+    dependsOn prepareNative
+}
